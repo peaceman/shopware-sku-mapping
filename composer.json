@@ -4,6 +4,12 @@
         "php": "^7.0",
         "illuminate/database": "^5.6",
         "vlucas/phpdotenv": "^2.4",
-        "illuminate/support": "^5.6"
+        "illuminate/support": "^5.6",
+        "monolog/monolog": "^1.23"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
     }
 }
