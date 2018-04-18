@@ -31,10 +31,8 @@ class Migrator
         $this->logger->info('Start mapping', ['dryRun' => $this->dryRun]);
 
         $skuMapping = $this->enrichSKUMappingWithNewArticlesIds($skuMapping);
-        $skuMapping = $skuMapping->mapWithKeys(function ($newData, $oldSKU) {
-            return [strtolower($oldSKU) => $newData];
-        });
 
+        // skus can be numbers, what collides with the following where in clause
         $oldSKUs = $skuMapping->keys()->map(function ($sku) { return (string)$sku; });
 
         $this->db->beginTransaction();
@@ -74,7 +72,10 @@ class Migrator
                 $sArticlesId = $this->getArticlesIdForSKU($sku);
 
                 return ['sku' => $sku, 'sArticlesId' => $sArticlesId];
-            });
+            })
+            ->mapWithKeys(function ($newData, $oldSKU) {
+                return [strtolower($oldSKU) => $newData];
+            });;
     }
 
     protected function getArticlesIdForSKU(string $sku)
